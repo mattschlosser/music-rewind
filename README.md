@@ -4,6 +4,8 @@ Shows your YouTube Music history in a nice sorted list, based on what you've pla
 
 Keeps data local and processes everything on client side. Your history is not uploaded anywhere. 
 
+[Visit the demo](https://music.mattschlosser.me)
+
 ### To fix:
 
 - [x] Click on a song to listen to it
