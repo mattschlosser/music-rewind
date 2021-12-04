@@ -86,7 +86,12 @@
           </v-list>
         </v-row>
         <v-row justify="center">
-
+          <v-alert v-if="loading" color="primary">
+            Loading may take a while
+          </v-alert>
+          <v-alert v-if="error" color="error">
+            {{error}}
+          </v-alert>
           <v-alert prominent class="warning mt-5">
             No files are uploaded to any server. Everything is processed locally for your privacy.  
           </v-alert>
@@ -109,7 +114,9 @@ import Songs from './Songs';
         Songs
     }, 
     data: () => ({
-        history: []
+        history: [], 
+        loading: false,
+        error: null
     }),
     computed: {
         songs() {
@@ -132,12 +139,24 @@ import Songs from './Songs';
     }, 
     methods: {
         parseFile(e) {
+           this.error = null;
             console.log(e.target.files);
             const f = new FileReader();
+            this.loading = true;
             f.readAsText(e.target.files[0]);
             const vm = this;
-            f.onload = function(ev) {
-                vm.history = JSON.parse(ev.target.result);
+            f.onload = (ev) => {
+              try {
+                let history = JSON.parse(ev.target.result);
+                history.filter(e => {
+                  return e.header === "Youtube Music" && (new Date(e.time)).getFullYear() === 2021;
+                });
+                this.history = history;
+              } catch (e) {
+                this.error = "Could not parse file";
+              } finally {
+                this.loading = false;
+              }
             }
             f.onprogress = function(event) {
                 console.log(event);
