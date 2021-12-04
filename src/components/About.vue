@@ -114,30 +114,24 @@ import Songs from './Songs';
         Songs
     }, 
     data: () => ({
-        history: [], 
+        songs: [], 
         loading: false,
-        error: null
+        countedSongs: {},  
+        keyedSongs: {},  
+        error: null, 
+        totalSongs: []
     }),
     computed: {
-        songs() {
-            return _.filter(this.history, e => e.header === "YouTube Music");
-        }, 
-        countedSongs() {
-            return _.countBy(this.songs, 'titleUrl');
-        }, 
-        keyedSongs() {
-            return _.keyBy(this.songs, 'titleUrl');
-        }, 
-        totalSongs() {
+    }, 
+    methods: {
+        computeTotalSongs() {
             let s = [];
             Object.keys(this.countedSongs).forEach(key => {
                 s.push({...this.keyedSongs[key], count: this.countedSongs[key], name: this.keyedSongs[key].title})
             })
             s.sort((a,b) => a.count < b.count ? 1 : a.count > b.count ? -1 : 0);
             return s;
-        }
-    }, 
-    methods: {
+        }, 
         parseFile(e) {
            this.error = null;
             console.log(e.target.files);
@@ -148,10 +142,13 @@ import Songs from './Songs';
               try {
                 let history = JSON.parse(ev.target.result);
                 history = history.filter(e => {
-                  return e.header === "Youtube Music" && (new Date(e.time)).getFullYear() === 2021;
+                  return e.header === "YouTube Music" && (new Date(e.time)).getFullYear() === 2021;
                 });
                 console.log(history);
-                this.history = history;
+                this.songs = history;
+                this.countedSongs = _.countBy(this.songs, 'titleUrl');
+                this.keyedSongs = _.keyBy(this.songs, 'titleUrl');
+                this.totalSongs = this.computeTotalSongs();
               } catch (e) {
                 this.error = "Could not parse file";
               } finally {
