@@ -150,6 +150,7 @@ import Songs from './Songs';
                 history = history.filter(e => {
                   return e.header === "Youtube Music" && (new Date(e.time)).getFullYear() === 2021;
                 });
+                console.log(history);
                 this.history = history;
               } catch (e) {
                 this.error = "Could not parse file";
