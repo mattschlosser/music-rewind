@@ -2,14 +2,6 @@
   <v-container>
     
     <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
@@ -86,9 +78,33 @@
           </v-list>
         </v-row>
         <v-row justify="center">
-          <v-alert v-if="loading" color="primary">
-            Loading may take a while
-          </v-alert>
+          <v-col cols="12">
+            <v-btn
+              color="primary"
+              dark
+              large
+              href="https://takeout.google.com"
+              target="_blank"
+            >
+              Go to Takeout
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              color="primary"
+              dark
+              large
+              href="https://www.youtube.com/music"
+              target="_blank"
+            >
+              Go to YouTube Music
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-alert v-if="loading" color="primary">
+              Loading may take a while
+            </v-alert>
+          </v-col>
           <v-alert v-if="error" color="error">
             {{error}}
           </v-alert>
@@ -133,31 +149,26 @@ import Songs from './Songs';
             return s;
         }, 
         parseFile(e) {
-           this.error = null;
-            console.log(e.target.files);
-            const f = new FileReader();
-            this.loading = true;
-            f.readAsText(e.target.files[0]);
-            f.onload = (ev) => {
-              try {
-                let history = JSON.parse(ev.target.result);
-                history = history.filter(e => {
-                  return e.header === "YouTube Music" && (new Date(e.time)).getFullYear() === 2021;
-                });
-                console.log(history);
-                this.songs = history;
-                this.countedSongs = _.countBy(this.songs, 'titleUrl');
-                this.keyedSongs = _.keyBy(this.songs, 'titleUrl');
-                this.totalSongs = this.computeTotalSongs();
-              } catch (e) {
-                this.error = "Could not parse file";
-              } finally {
-                this.loading = false;
-              }
+          this.error = null;
+          const f = new FileReader();
+          this.loading = true;
+          f.readAsText(e.target.files[0]);
+          f.onload = ev => {
+            try {
+              let history = JSON.parse(ev.target.result);
+              history = history.filter(e => {
+                return e.header === "YouTube Music" && (new Date(e.time)).getFullYear() === 2021;
+              });
+              this.songs = history;
+              this.countedSongs = _.countBy(this.songs, 'titleUrl');
+              this.keyedSongs = _.keyBy(this.songs, 'titleUrl');
+              this.totalSongs = this.computeTotalSongs();
+            } catch (e) {
+              this.error = "Could not parse file";
+            } finally {
+              this.loading = false;
             }
-            f.onprogress = function(event) {
-                console.log(event);
-            }
+          }
         }
     }
   }
