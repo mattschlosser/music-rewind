@@ -144,7 +144,6 @@ import Songs from './Songs';
             const f = new FileReader();
             this.loading = true;
             f.readAsText(e.target.files[0]);
-            const vm = this;
             f.onload = (ev) => {
               try {
                 let history = JSON.parse(ev.target.result);
