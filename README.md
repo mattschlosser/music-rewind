@@ -10,7 +10,7 @@ Keeps data local and processes everything on client side. Your history is not up
 
 - [x] Click on a song to listen to it
 - [ ] Add a chart to show listening habits over time
-- [ ] Fix UI Hanging on large history upload (JS workers?). 
+- [x] Fix UI Hanging on large history upload (JS workers?). 
 
 --- 
 
