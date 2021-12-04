@@ -147,7 +147,7 @@ import Songs from './Songs';
             f.onload = (ev) => {
               try {
                 let history = JSON.parse(ev.target.result);
-                history.filter(e => {
+                history = history.filter(e => {
                   return e.header === "Youtube Music" && (new Date(e.time)).getFullYear() === 2021;
                 });
                 this.history = history;
