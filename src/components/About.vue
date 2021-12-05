@@ -1,32 +1,25 @@
 <template>
   <v-container>
-    
-    <v-row class="text-center">
-
-      <v-col class="mb-4">
+    <v-row class="text-center" v-if="!songs.length">
+      <v-col cols='12' xs='12' lg='6' class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
           Music Rewind
         </h1>
-
         <p class="subheading font-weight-regular">
           Ever wanted to see what your most listened to song was over the past year, 
           but the music service you used didn't provide any fancy interface? This
           service is for you. 
         </p>
       </v-col>
-
-
-      <v-col class="mb-4">
+      <v-col cols='12' xs='12' lg='6' class="mb-4">
         <h2 class="display-2 font-weight-bold mb-3">
           Getting Started
         </h2>
-
         <p class="subheading font-weight-regular">
           To begin, you'll first need to get your Google Takeout data, to get a formatted listened
           of your music history. Once you have obtained that, upload it below.
         </p>
       </v-col>
-
       <v-col
         class="mb-5"
         cols="12"
@@ -34,17 +27,8 @@
         <h2 class="headline font-weight-bold mb-3">
           What's next?
         </h2>
-
         <v-row justify="center" >
-          <v-col cols="12" v-if="songs.length">
-            <v-select
-              v-model="currentYear"
-              :items="years"
-              label="Standard"
-            ></v-select>
-            <songs :songs="currentYearSongs"/>
-          </v-col>
-          <v-list v-else max-width="480px">
+          <v-list  max-width="480px">
             <v-list-item right>
               <div>
               Go to <b><a class="black--text" href="https://takeout.google.com">takeout.google.com</a></b>
@@ -113,14 +97,24 @@
           <v-alert v-if="error" color="error">
             {{error}}
           </v-alert>
+          <v-btn block depressed color="success" class="mt-5" @click="$refs.file.click()">
+            import your history
+          </v-btn>
           <v-alert prominent class="warning mt-5">
             No files are uploaded to any server. Everything is processed locally for your privacy.  
           </v-alert>
           <input type="file" ref="file" @change="parseFile" style="display: none"/>
-          <v-btn block depressed primary class="mt-5" @click="$refs.file.click()">
-            import your history
-          </v-btn>
         </v-row>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" v-if="songs.length">
+        <v-select
+          v-model="currentYear"
+          :items="years"
+          label="For Year"
+        ></v-select>
+        <songs :songs="currentYearSongs"/>
       </v-col>
     </v-row>
   </v-container>
@@ -172,6 +166,7 @@ import Songs from './Songs';
               });
               this.songs = history;
               this.years = _.uniq(history.map(e => (new Date(e.time).getFullYear().toString())));
+              this.currentYear = this.years[0];
               this.countedSongs = _.countBy(this.songs, 'titleUrl');
               this.keyedSongs = _.keyBy(this.songs, 'titleUrl');
               this.totalSongs = this.computeTotalSongs();

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-row>
-            <v-col lg='4' sm='12'>
+        <v-row class='text-center'>
+            <v-col xs='12' cols='12'>
                 <v-alert color="success" v-if="totalSongPlays">
                     <span class="headline">
                         <span class="text-uppercase">{{ totalSongs }}</span><br/>
@@ -9,7 +9,7 @@
                     </span><br/>
                 </v-alert>
             </v-col>
-            <v-col lg='4' sm='12'>
+            <v-col  xs='12' cols='12'>
                 <v-alert color="blue" v-if="totalSongPlays">
                     <span class="headline">
                         <span class="text-uppercase">{{ totalSongPlays }}</span><br/>
@@ -17,7 +17,7 @@
                     </span><br/>
                 </v-alert>
             </v-col>
-            <v-col lg='4' sm='12'>
+            <v-col xs='12' cols='12'>
                 <v-alert cols='4' color="pink" v-if="totalSongPlays">
                     <span class="headline">
                         <span class="text-uppercase">{{ totalSongPlays * 3 }}</span><br/>
