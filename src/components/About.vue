@@ -37,43 +37,48 @@
 
         <v-row justify="center" >
           <v-col cols="12" v-if="songs.length">
-            <songs :songs="totalSongs"/>
+            <v-select
+              v-model="currentYear"
+              :items="years"
+              label="Standard"
+            ></v-select>
+            <songs :songs="currentYearSongs"/>
           </v-col>
           <v-list v-else max-width="480px">
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Go to <b><a class="black--text" href="https://takeout.google.com">takeout.google.com</a></b>
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Select <b>YouTube</b>
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Select <b>History</b> in the items to export
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Select <b>JSON</b> as the format to export
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               <b>Wait</b> about 10 minutes for the export to complete.
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Download and <b>extract</b> the zip file
-              </v-list-item-text>
+              </div>
             </v-list-item>
             <v-list-item right>
-              <v-list-item-text>
+              <div>
               Go to <b>Takeout > Youtube and YouTube Music > history</b> and import <b>watch-history.json</b>
-              </v-list-item-text>
+              </div>
             </v-list-item>
           </v-list>
         </v-row>
@@ -135,15 +140,21 @@ import Songs from './Songs';
         countedSongs: {},  
         keyedSongs: {},  
         error: null, 
-        totalSongs: []
+        currentYear: null, 
+        totalSongs: [], 
+        years: []
     }),
     computed: {
+      currentYearSongs() {
+        return this.totalSongs.filter(song => song.year == this.currentYear || song.year === null);
+      }
     }, 
     methods: {
         computeTotalSongs() {
             let s = [];
             Object.keys(this.countedSongs).forEach(key => {
-                s.push({...this.keyedSongs[key], count: this.countedSongs[key], name: this.keyedSongs[key].title.replace(/^Watched /, '')})
+                let year = (new Date(this.keyedSongs[key].time)).getFullYear();
+                s.push({...this.keyedSongs[key], count: this.countedSongs[key], year, name: this.keyedSongs[key].title.replace(/^Watched /, '')})
             })
             s.sort((a,b) => a.count < b.count ? 1 : a.count > b.count ? -1 : 0);
             return s;
@@ -157,9 +168,10 @@ import Songs from './Songs';
             try {
               let history = JSON.parse(ev.target.result);
               history = history.filter(e => {
-                return e.header === "YouTube Music" && (new Date(e.time)).getFullYear() === 2021;
+                return e.header === "YouTube Music";
               });
               this.songs = history;
+              this.years = _.uniq(history.map(e => (new Date(e.time).getFullYear().toString())));
               this.countedSongs = _.countBy(this.songs, 'titleUrl');
               this.keyedSongs = _.keyBy(this.songs, 'titleUrl');
               this.totalSongs = this.computeTotalSongs();
