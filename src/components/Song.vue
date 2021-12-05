@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            Name: {{name}}
+            {{name}}
         </v-card-title>
         <v-card-subtitle>
             {{artist}}

@@ -143,7 +143,7 @@ import Songs from './Songs';
         computeTotalSongs() {
             let s = [];
             Object.keys(this.countedSongs).forEach(key => {
-                s.push({...this.keyedSongs[key], count: this.countedSongs[key], name: this.keyedSongs[key].title})
+                s.push({...this.keyedSongs[key], count: this.countedSongs[key], name: this.keyedSongs[key].title.replace(/^Watched /, '')})
             })
             s.sort((a,b) => a.count < b.count ? 1 : a.count > b.count ? -1 : 0);
             return s;
