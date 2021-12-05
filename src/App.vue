@@ -14,25 +14,27 @@
       <v-app-bar-nav-icon
         @click="drawer = !drawer"
       />
-      <v-app-bar-title>
-        Music Rewind - <small>Rewind for us all</small>
-      </v-app-bar-title>
+      <v-toolbar-title>
+        Music Rewind 
+      </v-toolbar-title>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://mattschlosser.me/"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">A Matt Schlosser Project</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <!-- <v-spacer></v-spacer> -->
     </v-app-bar>
 
     <v-main>
       <router-view></router-view>
     </v-main>
+    <v-footer class='text-center'>
+      <v-btn
+        href="https://mattschlosser.me/"
+        target="_blank"
+        text
+        block
+      >
+        <span class="mr-2">A Matt Schlosser Project</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-footer>
   </v-app>
 </template>
 
